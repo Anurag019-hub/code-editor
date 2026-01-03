@@ -1,0 +1,16 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "backend for code editor",
+  "keywords": [
+    "code",
+    "editor"
+  ],
+  "license": "ISC",
+  "author": "anurag",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
