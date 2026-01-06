@@ -1,7 +1,9 @@
 import {Router} from 'express';
 import { body } from 'express-validator';
-import { CreateUserController } from '../Controllers/User.controllers';
-UserRoute =  Router();
+import { CreateUserController } from '../Controllers/User.controllers.js';
+
+
+const UserRoute =  Router();
 
 
 UserRoute.post('/create',

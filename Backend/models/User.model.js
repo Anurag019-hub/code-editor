@@ -5,7 +5,7 @@ import jwt from'jsonwebtoken';
 const UserSchema =new  mongoose.Schema({
     email:{
         type:String,
-        require:true,
+        required:true,
         unique:true,
         trim:true,
         lowercase:true,
@@ -14,25 +14,25 @@ const UserSchema =new  mongoose.Schema({
     },
     password:{
         type:String,
-        require:true,
+        required:true,
         select:false,
     },
     friends:{
        type: [mongoose.Schema.Types.ObjectId],
-       ref: User,
+       ref: "User",
        default:[],
        
     }
 });
-UserSchema.static.hashPassword = async (password) =>{
+UserSchema.statics.hashPassword = async (password) =>{
     return await bcrypt.hash(password,10);
 }
 
-UserSchema.method.isValidPassword = async () =>{
+UserSchema.methods.isValidPassword = async () =>{
     return await bcrypt.compare(password,this.password);
 }
 
-UserSchema.method.generateJWT = async () =>{
+UserSchema.methods.generateJWT =  function (){
     return  jwt.sign({email:this.email},process.env.JWT_SECRET_KEY,{expiresIn:'24h'});
 }
 
