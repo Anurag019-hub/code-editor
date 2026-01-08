@@ -32,3 +32,13 @@ export const LoginUserController = async (req, res) => {
     }
 }
 
+export const ProfileController = async(req,res) =>{
+    const user = req.user;
+    if(!user){
+        res.status(401).send({error:"Unauthorized User"});
+    }else{
+        res.status(200).send({user});
+    }
+    
+}
+

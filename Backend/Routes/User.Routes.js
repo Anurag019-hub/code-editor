@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { body } from 'express-validator';
-import { CreateUserController,LoginUserController } from '../Controllers/User.controllers.js';
+import { CreateUserController,LoginUserController,ProfileController } from '../Controllers/User.controllers.js';
+import { authUserMiddleware } from '../Middleware/Auth.middleware.js';
 
 
 const UserRoute = Router();
@@ -18,6 +19,13 @@ UserRoute.post('/login',
     body('password').isString().withMessage("Password must a string"),
     LoginUserController
 );
+
+
+UserRoute.get('/profile',
+    authUserMiddleware,
+    ProfileController
+)
+
 
 
 export default UserRoute;
