@@ -1,6 +1,11 @@
 import { Router } from 'express';
 import { body } from 'express-validator';
-import { CreateUserController,LoginUserController,ProfileController } from '../Controllers/User.controllers.js';
+import {
+    CreateUserController,
+    LoginUserController,
+    ProfileController,
+    FriendRequestController
+} from '../Controllers/User.controllers.js';
 import { authUserMiddleware } from '../Middleware/Auth.middleware.js';
 
 
@@ -24,6 +29,19 @@ UserRoute.post('/login',
 UserRoute.get('/profile',
     authUserMiddleware,
     ProfileController
+)
+
+UserRoute.post('/logout',
+    authUserMiddleware,
+    LogoutController
+)
+
+UserRoute.post("/addfriend",
+    authUserMiddleware,
+    body('receiverId')
+        .isMongoId()
+        .withMessage('receiverId must be a valid user id'),
+    FriendRequestController
 )
 
 

@@ -1,4 +1,5 @@
 import UserModel from "../models/User.model.js"
+import FriendRequestModel from "../models/FriendRequest.model.js";
 
 export const CreateUserService = async (data) => {
     const { email, password } = data;
@@ -42,3 +43,25 @@ export const LoginUserService = async (data) => {
     }
 }
 
+export const FriendRequestService = async ({ senderId, receiverId }) => {
+  if (senderId.equals(receiverId)) {
+    throw new Error("Cannot send friend request to yourself");
+  }
+
+  const receiverExists = await UserModel.exists({ _id: receiverId });
+  if (!receiverExists) {
+    throw new Error("Receiver does not exist");
+  }
+
+  try {
+    return await FriendRequestModel.create({
+      sender: senderId,
+      receiver: receiverId,
+    });
+  } catch (err) {
+    if (err.code === 11000) {
+      throw new Error("Friend request already pending");
+    }
+    throw err; 
+  }
+};
