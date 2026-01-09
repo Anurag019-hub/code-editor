@@ -7,7 +7,7 @@ import {
   GetAllFriendRequestServices,
   AcceptRequestServices
 } from "../Services/User.services.js";
-import redisClient from "../config/redis.js";
+import redisClient from "../Services/Redis.services.js";
 
 export const CreateUserController = async (req, res) => {
   const result = validationResult(req);
