@@ -1,49 +1,70 @@
-import { Router } from 'express';
-import { body } from 'express-validator';
+import { Router } from "express";
+import { body } from "express-validator";
 import {
-    CreateUserController,
-    LoginUserController,
-    ProfileController,
-    FriendRequestController
-} from '../Controllers/User.controllers.js';
-import { authUserMiddleware } from '../Middleware/Auth.middleware.js';
-
+  CreateUserController,
+  LoginUserController,
+  ProfileController,
+  LogoutController,
+  FriendRequestController,
+  GetAllFriendRequestController,
+  AcceptRequestController,
+} from "../Controllers/User.controllers.js";
+import { authUserMiddleware } from "../Middleware/Auth.middleware.js";
 
 const UserRoute = Router();
 
 
-UserRoute.post('/create',
-    body('email').isEmail().withMessage('email must be valid Email ID'),
-    body('password').isString().withMessage("Password must a string"),
-    body('password').isLength({ min: 6 }).withMessage('Password must be 6 charater long '),
-    CreateUserController
+UserRoute.post(
+  "/create",
+  body("email").isEmail().withMessage("Email must be valid"),
+  body("password")
+    .isString().withMessage("Password must be a string")
+    .isLength({ min: 6 }).withMessage("Password must be at least 6 characters"),
+  CreateUserController
 );
 
-UserRoute.post('/login',
-    body('email').isEmail().withMessage('email must be valid Email ID'),
-    body('password').isString().withMessage("Password must a string"),
-    LoginUserController
+UserRoute.post(
+  "/login",
+  body("email").isEmail().withMessage("Email must be valid"),
+  body("password").isString().withMessage("Password must be a string"),
+  LoginUserController
+);
+
+UserRoute.get(
+  "/profile",
+  authUserMiddleware,
+  ProfileController
+);
+
+UserRoute.post(
+  "/logout",
+  authUserMiddleware,
+  LogoutController
 );
 
 
-UserRoute.get('/profile',
-    authUserMiddleware,
-    ProfileController
-)
+UserRoute.post(
+  "/friend-request/send",
+  authUserMiddleware,
+  body("receiverId")
+    .isMongoId()
+    .withMessage("receiverId must be a valid user id"),
+  FriendRequestController
+);
 
-UserRoute.post('/logout',
-    authUserMiddleware,
-    LogoutController
-)
+UserRoute.get(
+  "/friend-request",
+  authUserMiddleware,
+  GetAllFriendRequestController
+);
 
-UserRoute.post("/addfriend",
-    authUserMiddleware,
-    body('receiverId')
-        .isMongoId()
-        .withMessage('receiverId must be a valid user id'),
-    FriendRequestController
-)
-
-
+UserRoute.post(
+  "/friend-request/accept",
+  authUserMiddleware,
+  body("requestId")
+    .isMongoId()
+    .withMessage("requestId must be a valid id"),
+  AcceptRequestController
+);
 
 export default UserRoute;
